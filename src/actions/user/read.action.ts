@@ -12,7 +12,7 @@ export const readUser = async (input: ReadUserInput): Promise<IUser | null> => {
   // Find the user by email
   const user = await User.findOne({ email });
 
-  if (!user) {
+  if (!user || user.isDeleted) {
     throw new Error('User not found');
   }
 

@@ -16,7 +16,7 @@ export const updateUser = async (input: UpdateUserInput): Promise<IUser | null> 
   // Find the user by ID
   const user = await User.findById(userId);
 
-  if (!user) {
+  if (!user || user.isDeleted) {
     throw new Error('User not found');
   }
 
