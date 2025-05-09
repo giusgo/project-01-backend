@@ -24,7 +24,12 @@ export const readUserController = async (req: Request, res: Response) => {
 
 export const updateUserController = async (req: Request, res: Response) => {
   try {
-    const user = await updateUser({ userId: req.params.userId, updates: req.body });
+    // Pass the authenticated user from request to the update action
+    const user = await updateUser({ 
+      userId: req.params.userId, 
+      updates: req.body,
+      currentUser: req.user // This comes from the authentication middleware
+    });
     res.status(200).json(user);
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });

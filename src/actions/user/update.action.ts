@@ -8,10 +8,16 @@ interface UpdateUserInput {
     password: string;
     permissions: IUser['permissions'];
   }>;
+  currentUser?: {
+    id: string;
+    permissions?: {
+      modifyUsers?: boolean;
+    };
+  };
 }
 
 export const updateUser = async (input: UpdateUserInput): Promise<IUser | null> => {
-  const { userId, updates } = input;
+  const { userId, updates, currentUser } = input;
 
   // Find the user by ID
   const user = await User.findById(userId);
@@ -29,8 +35,19 @@ export const updateUser = async (input: UpdateUserInput): Promise<IUser | null> 
     user.password = await bcrypt.hash(updates.password, 10);
   }
 
+  // Handle permissions update with restrictions
   if (updates.permissions) {
-    user.permissions = { ...user.permissions, ...updates.permissions };
+    // Check if the user is trying to update their own permissions
+    const isSelfUpdate = currentUser && currentUser.id === userId;
+    
+    // Only allow permissions update if:
+    // 1. It's not a self-update, OR
+    // 2. It is a self-update but the user has the modifyUsers permission
+    if (!isSelfUpdate || (currentUser && currentUser.permissions && currentUser.permissions.modifyUsers)) {
+      user.permissions = { ...user.permissions, ...updates.permissions };
+    } else {
+      throw new Error('User attempted to update their own permissions without proper authorization');
+    }
   }
 
   // Save the updated user to the database
