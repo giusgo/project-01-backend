@@ -1,0 +1,39 @@
+services:
+  api:
+    container_name: library-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    depends_on:
+      - mongo
+    environment:
+      - NODE_ENV=production
+      - PORT=${PORT:-3000}
+      - MONGO_URI=${MONGO_URI:-mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/p3_database?authSource=admin}
+      - JWT_SECRET=${JWT_SECRET:-defaultjwtsecret}
+    networks:
+      - library-network
+
+  mongo:
+    container_name: library-db
+    image: mongo:6
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - library-network
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+
+volumes:
+  mongo-data:
+    name: library-mongo-data
+
+networks:
+  library-network:
+    name: library-network
+    driver: bridge
