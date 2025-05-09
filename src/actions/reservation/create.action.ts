@@ -23,6 +23,7 @@ export const createReservation = async (
     user,
     book,
     reservationDate: reservationDate || new Date(),
+    returnDate: null, // Explicitly set to null
     status: "active",
   });
 

@@ -1,11 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUserPermissions {
-  createBooks: boolean;
-  modifyUsers: boolean;
-  modifyBooks: boolean;
-  deleteUsers: boolean;
-  deleteBooks: boolean;
+  createBooks?: boolean;
+  modifyUsers?: boolean;
+  modifyBooks?: boolean;
+  deleteUsers?: boolean;
+  deleteBooks?: boolean;
 }
 
 export interface IUser extends Document {
