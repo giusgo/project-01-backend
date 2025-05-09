@@ -45,4 +45,25 @@ export const checkPermission = (permissionType: 'createBooks' | 'modifyBooks' | 
   };
 };
 
+// Middleware to check if the user is modifying their own account
+export const checkSelfOrPermission = (permissionType: 'modifyUsers' | 'deleteUsers') => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    authenticate(req, res, (err) => {
+      if (err) return next(err);
+      
+      // Allow if user is modifying their own account
+      if (req.user && req.user.id === req.params.userId) {
+        return next();
+      }
+      
+      // Otherwise, check if they have the permission
+      if (!req.user || !req.user.permissions || !req.user.permissions[permissionType]) {
+        return res.status(403).json({ error: 'Permission denied' });
+      }
+      
+      next();
+    });
+  };
+};
+
 export default authenticate;
