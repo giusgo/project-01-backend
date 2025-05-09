@@ -1,7 +1,8 @@
 {
-  "name": "p3-backend",
+  "name": "project-01-backend",
   "version": "1.0.0",
-  "description": "Parcial 3 backend",
+  "description": "Project 1 - Backend",
+  "author": "Giuseppe Gomez",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
