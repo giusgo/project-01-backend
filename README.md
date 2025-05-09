@@ -1,6 +1,6 @@
-# Parcial 3 back-end
+# Project 01 - Backend
 
-Se recomienda correr este proyecto con Docker para que sea mas comodo.
+To run with Docker:
 
 ```sh
 docker compose up
