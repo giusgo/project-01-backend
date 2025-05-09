@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import authenticate from '../middleware/authenticate';
+import authenticate, { checkPermission } from '../middleware/authenticate';
 import {
   createBookController,
   readBookByIdController,
@@ -10,10 +10,10 @@ import {
 
 const router = Router();
 
-router.post('/books', authenticate, createBookController); // Protected
-router.get('/books/:bookId', readBookByIdController); // Public
-router.post('/books/search', readBooksByVolumeController); // Public
-router.put('/books/:bookId', authenticate, updateBookController); // Protected
-router.delete('/books/:bookId', authenticate, deleteBookController); // Protected
+router.post('/books', checkPermission('createBooks'), createBookController);
+router.get('/books/:bookId', readBookByIdController);
+router.post('/books/search', readBooksByVolumeController);
+router.put('/books/:bookId', checkPermission('modifyBooks'), updateBookController);
+router.delete('/books/:bookId', checkPermission('deleteBooks'), deleteBookController);
 
 export default router;
