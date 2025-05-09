@@ -6,7 +6,7 @@ export interface IReservation extends Document {
   user: IUser["_id"];
   book: IBook["_id"];
   reservationDate: Date;
-  returnDate: Date;
+  returnDate: Date | null;
   status: "active" | "returned";
   isDeleted: boolean;
 }

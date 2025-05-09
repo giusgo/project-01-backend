@@ -1,4 +1,5 @@
 import Reservation, { IReservation } from "../../models/reservation.model";
+import Book from "../../models/book.model";
 
 interface CreateReservationInput {
   user: string;
@@ -11,6 +12,12 @@ export const createReservation = async (
 ): Promise<IReservation> => {
   const { user, book, reservationDate } = input;
 
+  // Check if the book is available
+  const bookToReserve = await Book.findById(book);
+  if (!bookToReserve || bookToReserve.isDeleted || !bookToReserve.availability) {
+    throw new Error('Book is not available for reservation');
+  }
+
   // Create a new reservation
   const newReservation = new Reservation({
     user,
@@ -21,6 +28,10 @@ export const createReservation = async (
 
   // Save the reservation to the database
   await newReservation.save();
+
+  // Update the book's availability
+  bookToReserve.availability = false;
+  await bookToReserve.save();
 
   return newReservation;
 };
