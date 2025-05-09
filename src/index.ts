@@ -4,6 +4,9 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database';
+import userRoutes from './routes/user.routes';
+import bookRoutes from './routes/book.routes';
+import reservationRoutes from './routes/reservation.routes';
 
 // Load environment variables
 dotenv.config();
@@ -18,6 +21,11 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.use('/api', userRoutes);
+app.use('/api', bookRoutes);
+app.use('/api', reservationRoutes);
 
 // Start server
 const startServer = async () => {
