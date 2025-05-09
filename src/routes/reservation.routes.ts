@@ -6,13 +6,14 @@ import {
   updateReservationController,
   deleteReservationController,
 } from '../controllers/reservation.controller';
+import authenticate from '../middleware/authenticate';
 
 const router = Router();
 
-router.post('/reservations', createReservationController);
-router.get('/reservations/:reservationId', readReservationByIdController);
-router.post('/reservations/search', readReservationsController);
-router.put('/reservations/:reservationId', updateReservationController);
-router.delete('/reservations/:reservationId', deleteReservationController);
+router.post('/reservations', authenticate, createReservationController); // Protected
+router.get('/reservations/:reservationId', authenticate, readReservationByIdController); // Protected
+router.post('/reservations/search', authenticate, readReservationsController); // Protected
+router.put('/reservations/:reservationId', authenticate, updateReservationController); // Protected
+router.delete('/reservations/:reservationId', authenticate, deleteReservationController); // Protected
 
 export default router;
